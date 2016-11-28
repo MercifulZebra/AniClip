@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
 }
 
 MainWindow::~MainWindow()
@@ -27,6 +28,7 @@ bool MainWindow::init(QString config_filename) {
     if (initSuccess_flag) {
         setCentralWidget(centralStack);
         connect(centralStack, SIGNAL(requestSizeBound(int,int,int,int)), this, SLOT(setSizeBound(int,int,int,int)));
+        centralStack->changeCurrentPage(centralStack->startScreen_index);
     }
 
 
@@ -35,12 +37,9 @@ bool MainWindow::init(QString config_filename) {
 
 
 void MainWindow::setSizeBound(int minHeight, int minWidth, int maxHeight, int maxWidth) {
-    setMinimumHeight(minHeight + ui->statusBar->height());
-    setMaximumHeight(maxHeight + ui->statusBar->height());
+    setMinimumHeight(minHeight + ui->statusBar->height() + 10);
+    setMaximumHeight(maxHeight + ui->statusBar->height() + 10);
     setMinimumWidth(minWidth);
     setMaximumWidth(maxWidth);
 
-    setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Expanding);
-
-    qDebug() << minimumHeight() << minimumWidth() << maximumHeight() << maximumWidth();
 }

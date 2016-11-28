@@ -20,7 +20,6 @@ bool CentralStackWidget::init(QString config_filename) {
 
     if (initSuccess_flag) {
         startScreen_index = addWidget(startScreen);
-        changeCurrentPage(startScreen_index);
 
         connect(startScreen->addScreenButton, SIGNAL(clicked(bool)), this, SLOT(setAddScreen()));
     }
