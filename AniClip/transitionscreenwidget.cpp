@@ -15,6 +15,5 @@ bool TransitionScreenWidget::init(QString config_filename) {
 }
 
 void TransitionScreenWidget::animateBackground() {
-    qDebug () << "animateBackground";
     emit finishAnimate_background();
 }

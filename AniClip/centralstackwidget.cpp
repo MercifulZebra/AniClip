@@ -88,7 +88,6 @@ void CentralStackWidget::changeCurrentPage(int index) {
 
         if (current != NULL) {
             disableInput();
-            qDebug() <<"Start animation";
             finishedBackgroundAnimation_flag = false;
             finishedSizeAnimation_flag = false;
             current->animateClear();
@@ -171,5 +170,4 @@ void CentralStackWidget::setQueuedScreen() {
 
 void CentralStackWidget::finishedTransition() {
     enableInput();
-    qDebug() <<"Finish Animation";
 }
