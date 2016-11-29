@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
+#include <QPalette>
 
 StartScreenWidget::StartScreenWidget(QWidget *parent) : StackedWidget(parent),
     mainLayout(NULL),
@@ -15,11 +16,15 @@ StartScreenWidget::StartScreenWidget(QWidget *parent) : StackedWidget(parent),
     minButtonStretch(1),
     buttonStretch(1.7),
     infoWidth(500),
+    minButtonBoxWidth(120),
+    maxButtonBoxWidth(200),
     addScreenButton(NULL),
     editScreenButton(NULL),
     miniScreenButton(NULL),
     settingsScreenButton(NULL),
-    otherButton(NULL)
+    otherButton(NULL),
+    clearButtonsAnimation(NULL),
+    onButtonsAnimation(NULL)
 {
 
 }
@@ -39,22 +44,24 @@ bool StartScreenWidget::init(QString config_filename) {
     mainLayout->setMargin(0);
     mainLayout->setSpacing(0);
 
-    int minHeight = vButtonBorder * 6 + buttonHeight * 5;
+    int minHeight = vButtonBorder * 6 + buttonHeight * 6;
 
-    minSize = QSize(infoWidth + buttonWidth * minButtonStretch + 2 * hButtonBorder, minHeight);
-    maxSize = QSize(infoWidth + buttonWidth * buttonStretch + 2 * hButtonBorder, minHeight);
+    minButtonBoxWidth = buttonWidth * minButtonStretch + 2 * hButtonBorder;
+    maxButtonBoxWidth = buttonWidth * buttonStretch + 2 * hButtonBorder;
+    minSize = QSize(infoWidth + minButtonBoxWidth, minHeight);
+    maxSize = QSize(infoWidth + maxButtonBoxWidth, minHeight);
 
     //infoBox
     infoBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     infoBox->setMinimumHeight(minHeight);
     infoBox->setFixedWidth(500);
-    infoBox->setFrameStyle(QFrame::Box);
+    //infoBox->setFrameStyle(QFrame::Box);
 
     //buttonBox
-    buttonBox->setMinimumWidth(buttonWidth);
+    buttonBox->setMinimumWidth(0);//buttonWidth + 2 * hButtonBorder);
     buttonBox->setMinimumHeight(minHeight);
-    buttonBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    buttonBox->setFrameStyle(QFrame::Box);
+    buttonBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    //buttonBox->setFrameStyle(QFrame::Box);
 
     addScreenButton = new QPushButton(buttonBox);
     editScreenButton = new QPushButton(buttonBox);
@@ -76,6 +83,19 @@ bool StartScreenWidget::init(QString config_filename) {
 
     setButtonPosition(buttonBox->size());
     updateButtonImages();
+
+    clearButtonsAnimation = new QPropertyAnimation(buttonBox, "maximumWidth", this);
+    clearButtonsAnimation->setDuration(300);
+    clearButtonsAnimation->setStartValue(maxButtonBoxWidth);
+    clearButtonsAnimation->setEndValue(0);
+
+    onButtonsAnimation = new QPropertyAnimation(buttonBox, "maximumWidth", this);
+    onButtonsAnimation->setDuration(300);
+    onButtonsAnimation->setStartValue(0);
+    onButtonsAnimation->setEndValue(maxButtonBoxWidth);
+
+    connect(clearButtonsAnimation, SIGNAL(finished()), this, SLOT(onFinishPropertyAnimation_clear()));
+    connect(onButtonsAnimation, SIGNAL(finished()), this, SLOT(onFinishPropertyAnimation_on()));
 
     return initSuccess_flag;
 }
@@ -172,10 +192,23 @@ void StartScreenWidget::updateButtonImages() {
 
 }
 
-void StartScreenWidget::resizeEvent(QResizeEvent *) {
-    if (infoBox != NULL && buttonBox != NULL) {
+void StartScreenWidget::animateClear() {
+    buttonBox->setMinimumWidth(0);
+    clearButtonsAnimation->start();
+}
+
+void StartScreenWidget::animateOn() {
+
+    setButtonPosition(QSize(minButtonBoxWidth, minSize.height()));
+    onButtonsAnimation->start();
+}
+
+void StartScreenWidget::resizeEvent(QResizeEvent *e) {
+    if (infoBox != NULL && buttonBox != NULL && !animationActive_flag) {
         setButtonPosition(buttonBox->size());
     }
+
+    StackedWidget::resizeEvent(e);
 }
 
 void StartScreenWidget::setButtonPosition(QSize buttonBoxSize) {
@@ -187,4 +220,13 @@ void StartScreenWidget::setButtonPosition(QSize buttonBoxSize) {
     miniScreenButton->setGeometry(border + staggerMid * 2, (vBorder * 3+ buttonHeight * 2), 120, 40);
     settingsScreenButton->setGeometry(border + staggerMid, (vBorder * 4 + buttonHeight * 3), 120, 40);
     otherButton->setGeometry(border, (vBorder * 5 + buttonHeight * 4), 120, 40);
+}
+
+void StartScreenWidget::onFinishPropertyAnimation_clear() {
+    emit finishAnimate_clear();
+}
+
+void StartScreenWidget::onFinishPropertyAnimation_on() {
+    emit finishAnimate_on();
+    buttonBox->setMinimumWidth(minButtonBoxWidth);
 }

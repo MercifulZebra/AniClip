@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPropertyAnimation>
 
 class CentralStackWidget;
 
@@ -23,9 +24,12 @@ private:
     Ui::MainWindow *ui;
 
     CentralStackWidget *centralStack;
+    QPropertyAnimation *minSizeAnimation;
+    QPropertyAnimation *maxSizeAnimation;
 
 public slots:
-    void setSizeBound(int minHeight, int minWidth, int maxHeight, int maxWidth);
+    void setSizeBound(int minHeight, int minWidth, int maxHeight, int maxWidth, bool animate_flag);
+    void onSizeAnimationFinish();
 };
 
 #endif // MAINWINDOW_H

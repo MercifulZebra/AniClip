@@ -5,6 +5,7 @@
 #include <QFrame>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QPropertyAnimation>
 
 #include "stackedwidget.h"
 
@@ -17,6 +18,9 @@ public:
     bool init(QString config_filename);
     void readConfig(QString config_filename);
     void updateButtonImages();
+
+    void animateClear();
+    void animateOn();
 
     virtual void resizeEvent(QResizeEvent *);
     void setButtonPosition(QSize buttonBoxSize);
@@ -34,6 +38,9 @@ public:
     double buttonStretch;
     int infoWidth;
 
+    int minButtonBoxWidth;
+    int maxButtonBoxWidth;
+
     QString buttonNormal_path;
     QString buttonHovered_path;
     QString buttonChecked_path;
@@ -44,9 +51,14 @@ public:
     QPushButton *settingsScreenButton;
     QPushButton *otherButton;
 
+    QPropertyAnimation *clearButtonsAnimation;
+    QPropertyAnimation *onButtonsAnimation;
+
 signals:
 
 public slots:
+    void onFinishPropertyAnimation_clear();
+    void onFinishPropertyAnimation_on();
 };
 
 #endif // STARTSCREENWIDGET_H
