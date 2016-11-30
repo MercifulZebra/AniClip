@@ -42,7 +42,6 @@ bool CentralStackWidget::init(QString config_filename) {
 
     if (initSuccess_flag) {
         addScreen_index = addWidget(addScreen);
-        connect(addScreen->backButton, SIGNAL(clicked(bool)), this, SLOT(setStartScreen()));
         connect(addScreen, SIGNAL(finishAnimate_clear()), this, SLOT(setTransitionScreen()));
         connect(addScreen, SIGNAL(finishAnimate_on()), this, SLOT(finishedTransition()));
     }

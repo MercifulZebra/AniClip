@@ -17,8 +17,12 @@ public:
 
     QGridLayout *mainLayout;
 
-    QPushButton *backButton;
-    QTimeEdit *startTime_edit;
+    QWidget *topBar;
+    QWidget *editWidget;
+    QWidget *tagDispWidget;
+    QWidget *clipDispWidget;
+
+
 signals:
 
 public slots:

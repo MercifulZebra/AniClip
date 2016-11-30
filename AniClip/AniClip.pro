@@ -19,6 +19,7 @@ SOURCES += main.cpp\
     stackedwidget.cpp \
     addscreenwidget.cpp \
     transitionscreenwidget.cpp \
+    clipdatabase.cpp \
     clipdatabase.cpp
 
 HEADERS  += mainwindow.h \
@@ -27,6 +28,7 @@ HEADERS  += mainwindow.h \
     stackedwidget.h \
     addscreenwidget.h \
     transitionscreenwidget.h \
+    clipdatabase.h \
     clipdatabase.h
 
 LIBS += -lOpengl32
