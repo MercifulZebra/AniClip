@@ -144,9 +144,9 @@ void StartScreenWidget::readConfig(QString config_filename) {
 
 void StartScreenWidget::updateButtonImages() {
 
-    buttonNormal_path = "testButton.png";
-    buttonHovered_path = "testHover.png";
-    buttonChecked_path = "testChecked.png";
+    buttonNormal_path = "button.png";
+    buttonHovered_path = "hover.png";
+    buttonChecked_path = "click.png";
 
     if (!buttonNormal_path.isEmpty() || !buttonHovered_path.isEmpty() || !buttonChecked_path.isEmpty()) {
         QString buttonNormalStyle = "";

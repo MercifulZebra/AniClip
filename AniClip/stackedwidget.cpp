@@ -36,7 +36,7 @@ void StackedWidget::paintEvent(QPaintEvent *e) {
     QRect target(0,0,100,100);
     target.setWidth(backgroundImg.width());
     target.setHeight(backgroundImg.height());
-    painter.fillRect(e->rect(), Qt::white);
+    painter.fillRect(e->rect(), Qt::black);
     painter.drawImage(target, backgroundImg);
     painter.end();
 

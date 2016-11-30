@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QDateTimeEdit>
 
 #include "stackedwidget.h"
 
@@ -17,6 +18,7 @@ public:
     QGridLayout *mainLayout;
 
     QPushButton *backButton;
+    QTimeEdit *startTime_edit;
 signals:
 
 public slots:

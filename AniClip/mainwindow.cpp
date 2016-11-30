@@ -5,6 +5,9 @@
 
 #include <QDebug>
 #include <QPropertyAnimation>
+// "Path to vlc" file options
+//--start-time=
+//--stop-time=
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

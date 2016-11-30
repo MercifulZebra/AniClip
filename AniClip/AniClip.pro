@@ -18,14 +18,18 @@ SOURCES += main.cpp\
     startscreenwidget.cpp \
     stackedwidget.cpp \
     addscreenwidget.cpp \
-    transitionscreenwidget.cpp
+    transitionscreenwidget.cpp \
+    clipdatabase.cpp
 
 HEADERS  += mainwindow.h \
     centralstackwidget.h \
     startscreenwidget.h \
     stackedwidget.h \
     addscreenwidget.h \
-    transitionscreenwidget.h
+    transitionscreenwidget.h \
+    clipdatabase.h
+
+LIBS += -lOpengl32
 
 FORMS    += mainwindow.ui
 
