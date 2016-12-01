@@ -5,13 +5,14 @@
 
 #include "stackedwidget.h"
 
+
 class TransitionScreenWidget : public StackedWidget
 {
     Q_OBJECT
 public:
     explicit TransitionScreenWidget(QWidget *parent = 0);
 
-    bool init(QString config_filename);
+    bool init(QString config_filename, logger::Logger *nLog);
 
     void animateBackground();
 

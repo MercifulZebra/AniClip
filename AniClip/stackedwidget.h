@@ -8,6 +8,10 @@
 #include <QLabel>
 #include <QSize>
 
+namespace logger {
+    class Logger;
+}
+
 class StackedWidget : public QOpenGLWidget
 {
     Q_OBJECT
@@ -31,6 +35,7 @@ public:
     QImage backgroundImg;
     bool animationActive_flag;
 
+    logger::Logger *log;
 
 signals:
     void finishAnimate_clear();

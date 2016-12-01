@@ -6,6 +6,10 @@
 
 class CentralStackWidget;
 
+namespace logger {
+    class Logger;
+}
+
 namespace Ui {
 class MainWindow;
 }
@@ -22,6 +26,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    logger::Logger *log;
 
     CentralStackWidget *centralStack;
     QPropertyAnimation *minSizeAnimation;

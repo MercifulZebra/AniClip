@@ -1,5 +1,7 @@
 #include "startscreenwidget.h"
 
+#include "logger.h"
+
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
@@ -29,8 +31,10 @@ StartScreenWidget::StartScreenWidget(QWidget *parent) : StackedWidget(parent),
 
 }
 
-bool StartScreenWidget::init(QString config_filename) {
+bool StartScreenWidget::init(QString config_filename, logger::Logger *nLog) {
     bool initSuccess_flag = true;
+
+    log = nLog;
 
     readConfig(config_filename);
 
@@ -114,28 +118,60 @@ void StartScreenWidget::readConfig(QString config_filename) {
 
                 if (split.count() > 1) {
 
-                    if (split.at(0) == "buttonHeight_pix") {
-                        buttonHeight = split.at(1).toInt();
-                    }
-                    else if (split.at(0) == "buttonWidth_pix") {
-                        buttonWidth = split.at(1).toInt();
-                    }
-                    else if (split.at(0) == "verticalButtonBorder_pix") {
-                        vButtonBorder = split.at(1).toInt();
-                    }
-                    else if (split.at(0) == "horizantalButtonBorder_pix") {
-                        hButtonBorder = split.at(1).toInt();
-                    }
-                    else if (split.at(0) == "minButtonStretch_ratio") {
-                        minButtonStretch = split.at(1).toDouble();
-                    }
-                    else if (split.at(0) == "maxButtonStretch_ratio") {
-                        buttonStretch = split.at(1).toDouble();
-                    }
-                    else if (split.at(0) == "infoAreaWidth_pix") {
-                        infoWidth = split.at(1).toDouble();
-                    }
+                    if (split.at(0) == "mainMenuSetting") {
+                        QStringList aSplit = split.at(1).split(":");
 
+                        for (int i = 0; i < aSplit.count(); i++) {
+                            QStringList sSplit = aSplit.at(i).split("=");
+
+                            if (sSplit.count() == 2) {
+
+                                if (sSplit.at(0) == "buttonHeight_pix") {
+                                    buttonHeight = sSplit.at(1).toInt();
+                                }
+                                else if (sSplit.at(0) == "buttonWidth_pix") {
+                                    buttonWidth = sSplit.at(1).toInt();
+                                }
+                                else if (sSplit.at(0) == "verticalButtonBorder_pix") {
+                                    vButtonBorder = sSplit.at(1).toInt();
+                                }
+                                else if (sSplit.at(0) == "horizantalButtonBorder_pix") {
+                                    hButtonBorder = sSplit.at(1).toInt();
+                                }
+                                else if (sSplit.at(0) == "minButtonStretch_ratio") {
+                                    minButtonStretch = sSplit.at(1).toDouble();
+                                }
+                                else if (sSplit.at(0) == "maxButtonStretch_ratio") {
+                                    buttonStretch = sSplit.at(1).toDouble();
+                                }
+                                else if (sSplit.at(0) == "infoAreaWidth_pix") {
+                                    infoWidth = sSplit.at(1).toDouble();
+                                }
+                                else if (split.at(0) == "addButton_path") {
+                                    addButton_style.base_path = sSplit.at(1);
+                                }
+                                else if (split.at(0) == "editButton_path") {
+                                    editButton_style.base_path = sSplit.at(1);
+                                }
+                                else if (split.at(0) == "miniButton_path") {
+                                    miniButton_style.base_path = sSplit.at(1);
+
+                                }
+                                else if (split.at(0) == "settingsButton_path") {
+                                    settingButton_style.base_path = sSplit.at(1);
+
+                                }
+                                else if (split.at(0) == "otherButton_path") {
+                                    otherButton_style.base_path = sSplit.at(1);
+
+                                }
+                                else {
+                                    log->warn(QString("Unmatched setting found in line \"%1\"").arg(line));
+                                }
+                            }
+                        }
+
+                    }
                 }
             }
         }
@@ -144,52 +180,50 @@ void StartScreenWidget::readConfig(QString config_filename) {
 
 void StartScreenWidget::updateButtonImages() {
 
-    buttonNormal_path = "button.png";
-    buttonHovered_path = "hover.png";
-    buttonChecked_path = "click.png";
+    defaultButton_style.base_path = "resources/startButton.png";
 
-    if (!buttonNormal_path.isEmpty() || !buttonHovered_path.isEmpty() || !buttonChecked_path.isEmpty()) {
-        QString buttonNormalStyle = "";
-        QString buttonHoverStyle = "";
-        QString buttonCheckedStyle = "";
-        QString buttonNormalImgStyle = QString("background-image: url(C:/Users/ZAC/Documents/Aniclip/trunk/AniClip/resources/%1);").arg(buttonNormal_path);
-        QString buttonHoverImgStyle = QString("background-image: url(C:/Users/ZAC/Documents/Aniclip/trunk/AniClip/resources/%1);").arg(buttonHovered_path);
-        QString buttonCheckedImgStyle = QString("background-image: url(C:/Users/ZAC/Documents/Aniclip/trunk/AniClip/resources/%1);").arg(buttonChecked_path);
+    defaultButton_style.button_style = style::generateButtonStyle(defaultButton_style.base_path, defaultButton_style.base_path, log);
 
-        if (!buttonNormal_path.isEmpty()) {
-            buttonNormalStyle = QString ("QPushButton {"
-                                         "background-color: transparent;"
-                                         "image-position: Center;"
-                                         "background-repeat: none;" +
-                                         buttonNormalImgStyle +
-                                         "border: none;"
-                                         "}");
-        }
-
-        if (!buttonHovered_path.isEmpty()) {
-            buttonHoverStyle = QString ("QPushButton:hover {"
-                                        "background-color: transparent;"
-                                        "image-position: Center;"
-                                        "background-repeat: none;" +
-                                        buttonHoverImgStyle +
-                                        "border: none;"
-                                        "}");
-        }
-
-        if (!buttonChecked_path.isEmpty()) {
-            buttonCheckedStyle = QString ("QPushButton:pressed {"
-                                          "background-color: transparent;"
-                                          "image-position: Center;"
-                                          "background-repeat: none;" +
-                                          buttonCheckedImgStyle +
-                                          "border: none;"
-                                          "}");
-        }
-        addScreenButton->setStyleSheet(buttonNormalStyle + buttonHoverStyle + buttonCheckedStyle);
+    if (!addButton_style.base_path.isEmpty()) {
+        addButton_style.button_style = style::generateButtonStyle(addButton_style.base_path, defaultButton_style.base_path, log);
+    }
+    else {
+        addButton_style.button_style = defaultButton_style.button_style;
     }
 
+    if (!editButton_style.base_path.isEmpty()) {
+        editButton_style.button_style = style::generateButtonStyle(editButton_style.base_path, defaultButton_style.base_path, log);
+    }
+    else {
+        editButton_style.button_style = defaultButton_style.button_style;
+    }
 
+    if (!miniButton_style.base_path.isEmpty()) {
+        miniButton_style.button_style = style::generateButtonStyle(miniButton_style.base_path, defaultButton_style.base_path, log);
+    }
+    else {
+        miniButton_style.button_style = defaultButton_style.button_style;
+    }
 
+    if (!settingButton_style.base_path.isEmpty()) {
+        settingButton_style.button_style = style::generateButtonStyle(settingButton_style.base_path, defaultButton_style.base_path, log);
+    }
+    else {
+        settingButton_style.button_style = defaultButton_style.button_style;
+    }
+
+    if (!otherButton_style.base_path.isEmpty()) {
+        otherButton_style.button_style = style::generateButtonStyle(otherButton_style.base_path, defaultButton_style.base_path, log);
+    }
+    else {
+        otherButton_style.button_style = defaultButton_style.button_style;
+    }
+
+    addScreenButton->setStyleSheet(addButton_style.button_style);
+    editScreenButton->setStyleSheet(editButton_style.button_style);
+    miniScreenButton->setStyleSheet(miniButton_style.button_style);
+    settingsScreenButton->setStyleSheet(settingButton_style.button_style);
+    otherButton->setStyleSheet(otherButton_style.button_style);
 }
 
 void StartScreenWidget::animateClear() {

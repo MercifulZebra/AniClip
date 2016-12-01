@@ -8,13 +8,16 @@ AddScreenWidget::AddScreenWidget(QWidget *parent) : StackedWidget(parent),
     topBar(NULL),
     editWidget(NULL),
     tagDispWidget(NULL),
-    clipDispWidget(NULL)
+    clipDispWidget(NULL),
+    returnButton(NULL)
 {
 
 }
 
-bool AddScreenWidget::init(QString config_filename) {
+bool AddScreenWidget::init(QString config_filename, logger::Logger *nLog) {
     bool initSuccess_flag = true;
+
+    log = nLog;
 
     mainLayout = new QGridLayout(this);
     topBar = new QWidget(this);
@@ -27,6 +30,9 @@ bool AddScreenWidget::init(QString config_filename) {
     mainLayout->addWidget(tagDispWidget, 1, 2, 2, 1);
     mainLayout->addWidget(clipDispWidget, 2, 0, 1, 1);
 
+
+    //Top Bar
+    returnButton = new QPushButton(topBar);
 
     minSize = QSize(900, 500);
     maxSize = QSize(900, 500);

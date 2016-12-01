@@ -7,9 +7,10 @@ TransitionScreenWidget::TransitionScreenWidget(QWidget *parent) : StackedWidget(
 
 }
 
-bool TransitionScreenWidget::init(QString config_filename) {
+bool TransitionScreenWidget::init(QString config_filename, logger::Logger *nLog) {
     bool initSucces_flag = true;
 
+    log = nLog;
 
     return initSucces_flag;
 }

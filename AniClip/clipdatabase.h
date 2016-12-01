@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QTime>
 
+namespace logger {
+    class Logger;
+}
+
 enum Season {
     SPRING,
     SUMMER,

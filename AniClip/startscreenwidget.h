@@ -7,7 +7,10 @@
 #include <QGridLayout>
 #include <QPropertyAnimation>
 
+#include "styletypes.h"
+
 #include "stackedwidget.h"
+
 
 class StartScreenWidget : public StackedWidget
 {
@@ -15,7 +18,7 @@ class StartScreenWidget : public StackedWidget
 public:
     explicit StartScreenWidget(QWidget *parent = 0);
 
-    bool init(QString config_filename);
+    bool init(QString config_filename, logger::Logger *nLog);
     void readConfig(QString config_filename);
     void updateButtonImages();
 
@@ -41,15 +44,18 @@ public:
     int minButtonBoxWidth;
     int maxButtonBoxWidth;
 
-    QString buttonNormal_path;
-    QString buttonHovered_path;
-    QString buttonChecked_path;
-
     QPushButton *addScreenButton;
     QPushButton *editScreenButton;
     QPushButton *miniScreenButton;
     QPushButton *settingsScreenButton;
     QPushButton *otherButton;
+
+    style::ButtonStyle defaultButton_style;
+    style::ButtonStyle addButton_style;
+    style::ButtonStyle editButton_style;
+    style::ButtonStyle miniButton_style;
+    style::ButtonStyle settingButton_style;
+    style::ButtonStyle otherButton_style;
 
     QPropertyAnimation *clearButtonsAnimation;
     QPropertyAnimation *onButtonsAnimation;

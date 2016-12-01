@@ -9,18 +9,24 @@ class StartScreenWidget;
 class AddScreenWidget;
 class TransitionScreenWidget;
 
+namespace logger {
+    class Logger;
+}
+
 class CentralStackWidget : public QStackedWidget
 {
     Q_OBJECT
 public:
     explicit CentralStackWidget(QWidget *parent = 0);
-    bool init(QString config_filename);
+    bool init(QString config_filename, logger::Logger *nLog);
     void setInitialPage(int index);
 
     void changeCurrentPage(int index);
     void changeCurrentPage_helper(int index);
     void disableInput();
     void enableInput();
+
+    logger::Logger *log;
 
     bool useAnimation_flag;
     int  queuedPage_index;

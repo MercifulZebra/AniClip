@@ -8,7 +8,8 @@ StackedWidget::StackedWidget(QWidget *parent) : QOpenGLWidget(parent),
     minSize(500,500),
     maxSize(500,500),
     backgroundImg(),
-    animationActive_flag(false)
+    animationActive_flag(false),
+    log(NULL)
 {
 
 

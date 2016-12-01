@@ -7,6 +7,7 @@
 #include <QDebug>
 
 CentralStackWidget::CentralStackWidget(QWidget *parent) : QStackedWidget(parent),
+    log(NULL),
     useAnimation_flag(true),
     queuedPage_index(-1),
     disableInput_flag(false),
@@ -22,11 +23,13 @@ CentralStackWidget::CentralStackWidget(QWidget *parent) : QStackedWidget(parent)
 
 }
 
-bool CentralStackWidget::init(QString config_filename) {
+bool CentralStackWidget::init(QString config_filename, logger::Logger *nLog) {
     bool initSuccess_flag = true;
 
+    log = nLog;
+
     startScreen = new StartScreenWidget(this);
-    initSuccess_flag = initSuccess_flag && startScreen->init(config_filename);
+    initSuccess_flag = initSuccess_flag && startScreen->init(config_filename, log);
 
     if (initSuccess_flag) {
         startScreen_index = addWidget(startScreen);
@@ -38,7 +41,7 @@ bool CentralStackWidget::init(QString config_filename) {
     }
 
     addScreen = new AddScreenWidget(this);
-    initSuccess_flag = initSuccess_flag && addScreen->init(config_filename);
+    initSuccess_flag = initSuccess_flag && addScreen->init(config_filename, log);
 
     if (initSuccess_flag) {
         addScreen_index = addWidget(addScreen);
@@ -47,7 +50,7 @@ bool CentralStackWidget::init(QString config_filename) {
     }
 
     tranScreen = new TransitionScreenWidget(this);
-    initSuccess_flag = initSuccess_flag && tranScreen->init(config_filename);
+    initSuccess_flag = initSuccess_flag && tranScreen->init(config_filename, log);
 
     if (initSuccess_flag) {
         tranScreen_index = addWidget(tranScreen);

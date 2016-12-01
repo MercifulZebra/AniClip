@@ -13,7 +13,9 @@ class AddScreenWidget : public StackedWidget
     Q_OBJECT
 public:
     explicit AddScreenWidget(QWidget *parent = 0);
-    bool init(QString config_filename);
+    bool init(QString config_filename, logger::Logger *nLog);
+
+    void updateImages();
 
     QGridLayout *mainLayout;
 
@@ -21,6 +23,10 @@ public:
     QWidget *editWidget;
     QWidget *tagDispWidget;
     QWidget *clipDispWidget;
+
+    //Top Bar
+    QPushButton* returnButton;
+
 
 
 signals:

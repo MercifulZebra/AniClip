@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     addscreenwidget.cpp \
     transitionscreenwidget.cpp \
     clipdatabase.cpp \
-    clipdatabase.cpp
+    logger.cpp \
+    styletypes.cpp
 
 HEADERS  += mainwindow.h \
     centralstackwidget.h \
@@ -29,11 +30,13 @@ HEADERS  += mainwindow.h \
     addscreenwidget.h \
     transitionscreenwidget.h \
     clipdatabase.h \
-    clipdatabase.h
+    styletypes.h \
+    logger.h
 
 LIBS += -lOpengl32
 
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    toBeDone_list
+    toBeDone_list \
+    aniclip_config.txt
