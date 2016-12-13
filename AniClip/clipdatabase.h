@@ -3,20 +3,22 @@
 
 #include <QObject>
 #include <QTime>
+#include <QVector>
+
 
 namespace logger {
     class Logger;
 }
 
 enum Season {
-    SPRING,
-    SUMMER,
-    FALL,
-    WINTER
+    SEASON_SPRING,
+    SEASON_SUMMER,
+    SEASON_FALL,
+    SEASON_WINTER
 };
 
 struct AirSeason {
-    AirSeason() : year(2000), season(Season::SPRING) {}
+    AirSeason() : year(2000), season(Season::SEASON_SPRING) {}
     int year;
     Season season;
 };
@@ -28,6 +30,7 @@ public:
     explicit Clip(QObject *parent = 0);
 
     static QString seasonToString(Season s);
+    bool compareInfo(QString nName, int nNum, AirSeason nSeason, QTime nStart, QTime nEnd, QStringList nTags, QString nNote, QString nLink, QString nSource);
 
     QString     show_name;
     int         episode_num;
@@ -47,12 +50,24 @@ signals:
 public slots:
 };
 
+class ShowGroup : public QObject
+{
+    explicit ShowGroup(QObject *parent = 0);
+
+    QVector<Clip*> clips;
+    QString show_name;
+};
+
 class ClipList : public QObject
 {
     Q_OBJECT
 public:
     explicit ClipList(QObject *parent = 0);
 
+    logger::Logger *log;
+
+    QVector<ShowGroup*>  shows;
+    QString         list_name;
 signals:
 
 public slots:
@@ -63,6 +78,25 @@ class ClipDatabase : public QObject
     Q_OBJECT
 public:
     explicit ClipDatabase(QObject *parent = 0);
+
+    void init(QString config_filename, logger::Logger *nLog);
+    void loadDatabase(QString database_filename, ClipList* target_list);
+    void saveDatabase();
+
+    void importShows(QString filename);
+
+    Clip* addNewClip();
+
+    logger::Logger *log;
+
+    //
+    ClipList* main_list;
+    QVector<ClipList*> lists;
+    QString databaseFilename;
+    QString backupFilename;
+    QStringList showList;
+
+
 
 signals:
 
