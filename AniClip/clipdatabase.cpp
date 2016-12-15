@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QString>
 #include <QMessageBox>
 
 #include "logger.h"
@@ -91,6 +92,25 @@ bool Clip::compareInfo(QString nName, int nNum, AirSeason nSeason, QTime nStart,
     return infoChanged_flag;
 }
 
+QStringList Clip::clipFromString(QString clipString) {
+    QStringList err;
+
+    QStringList stringItems = clipString.split(" |!| ");
+
+    // "ShowName |!| Episode |!| StartTime |!| EndTime |!| Season |!| Tags |!| Note |!| Link |!| LocalSource"
+
+    if (stringItems.count() == 9) {
+        QString showName = stringItems.at(2);
+        int epNum = stringItems.at(1).toInt();
+
+    }
+    else {
+        err.append(QString("Invalid number of items %1").arg(stringItems.count()));
+    }
+
+    return err;
+}
+
 ShowGroup::ShowGroup(QObject *parent) : QObject(parent) ,
     clips(),
     show_name()
@@ -145,7 +165,7 @@ void ClipDatabase::loadDatabase(QString database_filename, ClipList* target_list
 
     if (target_list != main_list) {
 
-        QMessageBox sBox(QMessageBox::Question, "Load Database?", "Merge Files to Database?", QMessageBox::Ok | QMessageBox::Cancel, this);
+        QMessageBox sBox(QMessageBox::Question, QString("Load Database?"), QString("Merge Files to Database?"), QMessageBox::Ok | QMessageBox::Cancel, dynamic_cast<QWidget*>(this->parent()));
         rButton = sBox.exec();
     }
 
@@ -156,6 +176,11 @@ void ClipDatabase::loadDatabase(QString database_filename, ClipList* target_list
                 QTextStream nStream(&nFile);
 
                 while (!nStream.atEnd()) {
+                    QString line = nStream.readLine();
+
+                    if (!line.isEmpty() && !line.startsWith("#")) {
+
+                    }
 
                 }
             }
@@ -175,7 +200,6 @@ void ClipDatabase::saveDatabase() {
 
 void ClipDatabase::importShows(QString filename) {
     QFile nFile(filename);
-    int count = 0;
     if (nFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream nStream(&nFile);
 

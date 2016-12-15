@@ -32,6 +32,8 @@ public:
     static QString seasonToString(Season s);
     bool compareInfo(QString nName, int nNum, AirSeason nSeason, QTime nStart, QTime nEnd, QStringList nTags, QString nNote, QString nLink, QString nSource);
 
+    QStringList clipFromString(QString clipString);
+
     QString     show_name;
     int         episode_num;
     AirSeason   air_season;
